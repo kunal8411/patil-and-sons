@@ -4,7 +4,7 @@ import { MessageCircle, Mail, Phone } from "lucide-react";
 
 export default function Contact() {
   const handleWhatsAppClick = () => {
-    window.open("https://wa.me/+919876543210", "_blank");
+    window.open("https://wa.me/+919657419302", "_blank");
   };
 
   return (
@@ -39,7 +39,7 @@ export default function Contact() {
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <Phone className="h-4 w-4 mr-2" />
-                    <span>+91 98765 43210</span>
+                    <span>+91 9657419302</span>
                   </div>
                   <div className="flex items-center">
                     <Mail className="h-4 w-4 mr-2" />

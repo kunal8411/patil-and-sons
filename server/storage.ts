@@ -40,17 +40,27 @@ export class MemStorage implements IStorage {
         area: "2000 sq.ft",
         location: "Nashik",
         type: "NA Plot",
-        imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
+        imageUrl: "https://is1-3.housingcdn.com/01c16c28/08cbb671362e9ed978ef1f82f5194a6b/v0/fs/residential_plot-for-sale-nashik_road-Nashik-plot_view.jpg",
         features: ["Corner Plot", "Ready for Construction", "All Utilities"]
       },
       {
-        title: "Agricultural Land in Ozar",
+        title: "Agricultural Land in Dindori",
         description: "Fertile agricultural land with water source",
         price: "₹30 Lakhs",
         area: "1 Acre",
         location: "Ozar",
         type: "Agricultural",
-        imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
+        imageUrl: "https://5.imimg.com/data5/ANDROID/Default/2021/4/BD/XV/AD/49810555/product-jpeg-500x500.jpg",
+        features: ["Fertile Soil", "Water Source", "Road Access"]
+      },
+      {
+        title: "Agricultural Land in Ozar",
+        description: "Fertile agricultural land",
+        price: "₹80 Lakhs",
+        area: "2 Acre",
+        location: "Ozar",
+        type: "Agricultural",
+        imageUrl: "https://5.imimg.com/data5/EI/MZ/KK/SELLER-1419216/agriculture-land-sale-500x500.jpg",
         features: ["Fertile Soil", "Water Source", "Road Access"]
       }
     ];
@@ -62,7 +72,7 @@ export class MemStorage implements IStorage {
         location: "Nashik"
       },
       {
-        name: "Amit Shah",
+        name: "Amit Khairnar",
         content: "Very satisfied with the property documentation and legal assistance provided.",
         location: "Mumbai"
       }

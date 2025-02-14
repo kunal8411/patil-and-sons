@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 export default function Hero() {
   return (
@@ -20,7 +21,10 @@ export default function Hero() {
                 Discover exclusive NA plots and agricultural lands in prime locations across Nashik, Ozar, and Dindori regions
               </p>
               <Button className="mt-8" size="lg">
+                <Link href="/properties">
                 Explore Properties
+
+                </Link>
               </Button>
             </div>
           </div>

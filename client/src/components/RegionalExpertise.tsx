@@ -4,17 +4,17 @@ export default function RegionalExpertise() {
   const regions = [
     {
       name: "Nashik",
-      image: "https://images.unsplash.com/photo-1694667509674-676629c9d069",
+      image: "https://5.imimg.com/data5/SELLER/Default/2024/6/425128997/PT/HQ/GJ/202455319/2-1000x1000.jpg",
       description: "Prime NA plots in developing areas"
     },
     {
       name: "Ozar",
-      image: "https://images.unsplash.com/photo-1729556227126-452c221f1ef4",
+      image: "https://media.licdn.com/dms/image/v2/C5622AQG2BtKSwfr6nA/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1580482946526?e=2147483647&v=beta&t=Rcno2t835F3jPdAf5kdDl4SJurxzPoeM-13nNIb9qcA",
       description: "Agricultural lands with excellent connectivity"
     },
     {
       name: "Dindori",
-      image: "https://images.unsplash.com/photo-1593699301596-dca618016c95",
+      image: "https://imagecdn.99acres.com/media1/27600/2/552002841M-1736231641369.jpg",
       description: "Investment opportunities in growing regions"
     }
   ];
