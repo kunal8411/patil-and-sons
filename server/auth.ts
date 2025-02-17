@@ -47,11 +47,18 @@ export function setupAuth(app: Express) {
 
   passport.use(
     new LocalStrategy(async (username, password, done) => {
-      const user = await storage.getUserByUsername(username);
-      if (!user || !(await comparePasswords(password, user.password))) {
-        return done(null, false);
-      } else {
+      try {
+        const user = await storage.getUserByUsername(username);
+        if (!user) {
+          return done(null, false, { message: "Username not found" });
+        }
+        const isValid = await comparePasswords(password, user.password);
+        if (!isValid) {
+          return done(null, false, { message: "Incorrect password" });
+        }
         return done(null, user);
+      } catch (err) {
+        return done(err);
       }
     }),
   );
@@ -62,38 +69,25 @@ export function setupAuth(app: Express) {
     done(null, user);
   });
 
-  app.post("/api/register", async (req, res, next) => {
-    const existingUser = await storage.getUserByUsername(req.body.username);
-    if (existingUser) {
-      return res.status(400).send("Username already exists");
-    }
-
-    const user = await storage.createUser({
-      ...req.body,
-      password: await hashPassword(req.body.password),
-    });
-
-    req.login(user, (err) => {
-      if (err) return next(err);
-      res.status(201).json(user);
-    });
-  });
-
   app.post("/api/login", async (req, res, next) => {
-    const user = await storage.getUserByUsername(req.body.username);
+    try {
+      const user = await storage.getUserByUsername(req.body.username);
 
-    if (!user) {
-      return res.status(401).json({ message: "Username not found" });
+      if (!user) {
+        return res.status(401).json({ message: "Username not found" });
+      }
+
+      if (!(await comparePasswords(req.body.password, user.password))) {
+        return res.status(401).json({ message: "Incorrect password" });
+      }
+
+      req.login(user, (err) => {
+        if (err) return next(err);
+        res.status(200).json(user);
+      });
+    } catch (error) {
+      next(error);
     }
-
-    if (!(await comparePasswords(req.body.password, user.password))) {
-      return res.status(401).json({ message: "Incorrect password" });
-    }
-
-    req.login(user, (err) => {
-      if (err) return next(err);
-      res.status(200).json(user);
-    });
   });
 
   app.post("/api/logout", (req, res, next) => {

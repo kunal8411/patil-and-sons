@@ -2,8 +2,17 @@ import { users, properties, testimonials } from "@shared/schema";
 import type { User, InsertUser, Property, InsertProperty, Testimonial, InsertTestimonial } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import { scrypt, randomBytes } from "crypto";
+import { promisify } from "util";
 
 const MemoryStore = createMemoryStore(session);
+const scryptAsync = promisify(scrypt);
+
+async function hashPassword(password: string) {
+  const salt = randomBytes(16).toString("hex");
+  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${buf.toString("hex")}.${salt}`;
+}
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -40,11 +49,12 @@ export class MemStorage implements IStorage {
     this.initializeSampleData();
   }
 
-  private initializeSampleData() {
-    // Create an admin user
+  private async initializeSampleData() {
+    // Create an admin user with hashed password
+    const hashedPassword = await hashPassword("sandeepSir@11th");
     this.createUser({
       username: "patilandsons",
-      password: "sandeepSir@11th", // This will be hashed by the auth system
+      password: hashedPassword,
       isAdmin: true
     });
 
@@ -118,7 +128,12 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      id, 
+      username: insertUser.username,
+      password: insertUser.password,
+      isAdmin: insertUser.isAdmin ?? false
+    };
     this.users.set(id, user);
     return user;
   }
