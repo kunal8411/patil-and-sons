@@ -1,5 +1,9 @@
-import { users, type User, type InsertUser } from "@shared/schema";
-import { properties, testimonials, type Property, type InsertProperty, type Testimonial, type InsertTestimonial } from "@shared/schema";
+import { users, properties, testimonials } from "@shared/schema";
+import type { User, InsertUser, Property, InsertProperty, Testimonial, InsertTestimonial } from "@shared/schema";
+import session from "express-session";
+import createMemoryStore from "memorystore";
+
+const MemoryStore = createMemoryStore(session);
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -9,6 +13,7 @@ export interface IStorage {
   getTestimonials(): Promise<Testimonial[]>;
   createProperty(property: InsertProperty): Promise<Property>;
   createTestimonial(testimonial: InsertTestimonial): Promise<Testimonial>;
+  sessionStore: session.Store;
 }
 
 export class MemStorage implements IStorage {
@@ -18,6 +23,7 @@ export class MemStorage implements IStorage {
   private currentUserId: number;
   private currentPropertyId: number;
   private currentTestimonialId: number;
+  readonly sessionStore: session.Store;
 
   constructor() {
     this.users = new Map();
@@ -26,12 +32,22 @@ export class MemStorage implements IStorage {
     this.currentUserId = 1;
     this.currentPropertyId = 1;
     this.currentTestimonialId = 1;
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    });
 
     // Add some sample data
     this.initializeSampleData();
   }
 
   private initializeSampleData() {
+    // Create an admin user
+    this.createUser({
+      username: "admin",
+      password: "admin123", // This will be hashed by the auth system
+      isAdmin: true
+    });
+
     const sampleProperties: InsertProperty[] = [
       {
         title: "Premium NA Plot in Nashik",
@@ -40,7 +56,11 @@ export class MemStorage implements IStorage {
         area: "2000 sq.ft",
         location: "Nashik",
         type: "NA Plot",
-        imageUrl: "https://is1-3.housingcdn.com/01c16c28/08cbb671362e9ed978ef1f82f5194a6b/v0/fs/residential_plot-for-sale-nashik_road-Nashik-plot_view.jpg",
+        images: [
+          "https://is1-3.housingcdn.com/01c16c28/08cbb671362e9ed978ef1f82f5194a6b/v0/fs/residential_plot-for-sale-nashik_road-Nashik-plot_view.jpg",
+          "https://images.unsplash.com/photo-1582407947304-fd86f028f716"
+        ],
+        videos: [],
         features: ["Corner Plot", "Ready for Construction", "All Utilities"]
       },
       {
@@ -50,7 +70,11 @@ export class MemStorage implements IStorage {
         area: "1 Acre",
         location: "Ozar",
         type: "Agricultural",
-        imageUrl: "https://5.imimg.com/data5/ANDROID/Default/2021/4/BD/XV/AD/49810555/product-jpeg-500x500.jpg",
+        images: [
+          "https://5.imimg.com/data5/ANDROID/Default/2021/4/BD/XV/AD/49810555/product-jpeg-500x500.jpg",
+          "https://images.unsplash.com/photo-1500382017468-9049fed747ef"
+        ],
+        videos: [],
         features: ["Fertile Soil", "Water Source", "Road Access"]
       },
       {
@@ -109,7 +133,13 @@ export class MemStorage implements IStorage {
 
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
     const id = this.currentPropertyId++;
-    const property: Property = { ...insertProperty, id };
+    const now = new Date().toISOString();
+    const property: Property = { 
+      ...insertProperty, 
+      id,
+      createdAt: now,
+      updatedAt: now
+    };
     this.properties.set(id, property);
     return property;
   }

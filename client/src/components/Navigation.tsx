@@ -1,11 +1,15 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { Phone, LogIn, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Navigation() {
+  const { user, logoutMutation } = useAuth();
+
   const handleWhatsAppClick = () => {
     window.open("https://wa.me/+919657419302", "_blank");
   };
+
   return (
     <nav className="bg-white border-b border-gray-200 fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,6 +32,23 @@ export default function Navigation() {
               <Phone className="mr-2 h-4 w-4" />
               Contact Us
             </Button>
+            {user ? (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => logoutMutation.mutate()}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </Button>
+            ) : (
+              <Link href="/login">
+                <Button variant="outline" size="sm">
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Admin Login
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
