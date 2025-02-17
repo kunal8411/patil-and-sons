@@ -1,10 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import PropertyCard from "@/components/PropertyCard";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import type { Property } from "@shared/schema";
-import { useEffect } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { useState } from "react";
+import AddPropertyForm from "@/components/AddPropertyForm";
 
 export default function Properties() {
+  const { user } = useAuth();
+  const [showAddForm, setShowAddForm] = useState(false);
   // const { data: properties, isLoading } = useQuery<Property[]>({
   //   queryKey: ["/api/properties"]
   // });
@@ -43,14 +49,7 @@ export default function Properties() {
       features: ["Fertile Soil", "Water Source", "Road Access"]
     }
   ]
-var isLoading=false;
-  useEffect(()=>{
-    isLoading=true;
-    setTimeout(()=>{
-      isLoading=false;
-    },1000)
-   
-  },[])
+  var isLoading=false;
 
   if (isLoading) {
     return (
@@ -67,7 +66,22 @@ var isLoading=false;
   return (
     <main className="pt-24">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-playfair mb-12">Available Properties</h1>
+        <div className="flex justify-between items-center mb-12">
+          <h1 className="text-4xl font-playfair">Available Properties</h1>
+          {user?.isAdmin && (
+            <Button onClick={() => setShowAddForm(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Property
+            </Button>
+          )}
+        </div>
+
+        {showAddForm && (
+          <div className="mb-8">
+            <AddPropertyForm onClose={() => setShowAddForm(false)} />
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {properties?.map((property) => (
             <PropertyCard key={property.id} property={property} />

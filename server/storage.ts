@@ -94,7 +94,10 @@ export class MemStorage implements IStorage {
         area: "2 Acre",
         location: "Ozar",
         type: "Agricultural",
-        imageUrl: "https://5.imimg.com/data5/EI/MZ/KK/SELLER-1419216/agriculture-land-sale-500x500.jpg",
+        images: [
+          "https://5.imimg.com/data5/EI/MZ/KK/SELLER-1419216/agriculture-land-sale-500x500.jpg"
+        ],
+        videos: [],
         features: ["Fertile Soil", "Water Source", "Road Access"]
       }
     ];

@@ -11,7 +11,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   return (
     <Card className="overflow-hidden">
       <img
-        src={property.imageUrl}
+        src={property.images[0]} // Display the first image as the main image
         alt={property.title}
         className="h-48 w-full object-cover"
       />
