@@ -79,8 +79,21 @@ export function setupAuth(app: Express) {
     });
   });
 
-  app.post("/api/login", passport.authenticate("local"), (req, res) => {
-    res.status(200).json(req.user);
+  app.post("/api/login", async (req, res, next) => {
+    const user = await storage.getUserByUsername(req.body.username);
+
+    if (!user) {
+      return res.status(401).json({ message: "Username not found" });
+    }
+
+    if (!(await comparePasswords(req.body.password, user.password))) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    req.login(user, (err) => {
+      if (err) return next(err);
+      res.status(200).json(user);
+    });
   });
 
   app.post("/api/logout", (req, res, next) => {

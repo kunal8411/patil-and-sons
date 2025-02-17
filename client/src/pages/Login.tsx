@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useState } from "react";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -18,13 +19,18 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export default function Login() {
   const { loginMutation, user } = useAuth();
   const [, setLocation] = useLocation();
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    loginMutation.mutate(data);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await loginMutation.mutateAsync(data);
+    } catch (error: any) {
+      setErrorMessage(error.message || "Login failed");
+    }
   };
 
   // Redirect if already logged in
@@ -68,6 +74,10 @@ export default function Login() {
                 </p>
               )}
             </div>
+
+            {errorMessage && (
+              <p className="text-sm text-red-500 mt-2">{errorMessage}</p>
+            )}
 
             <Button
               type="submit"

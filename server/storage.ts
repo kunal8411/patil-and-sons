@@ -43,8 +43,8 @@ export class MemStorage implements IStorage {
   private initializeSampleData() {
     // Create an admin user
     this.createUser({
-      username: "admin",
-      password: "admin123", // This will be hashed by the auth system
+      username: "patilandsons",
+      password: "sandeepSir@11th", // This will be hashed by the auth system
       isAdmin: true
     });
 
