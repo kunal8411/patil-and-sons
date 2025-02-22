@@ -17,7 +17,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const { loginMutation, user } = useAuth();
+  const data1 = useAuth();
   const [, setLocation] = useLocation();
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -27,14 +27,18 @@ export default function Login() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await loginMutation.mutateAsync(data);
+      if(data.username==='patilandsons' && data.password==='sandeepSir@11th'){
+
+        localStorage.setItem('isLoggedIn', 'true');
+        setLocation('/properties');
+      }
     } catch (error: any) {
       setErrorMessage(error.message || "Login failed");
     }
   };
 
   // Redirect if already logged in
-  if (user) {
+  if (data1?.isAdmin && data1?.isAdmin===true) {
     setLocation("/");
     return null;
   }
@@ -82,9 +86,9 @@ export default function Login() {
             <Button
               type="submit"
               className="w-full"
-              disabled={loginMutation.isPending}
+              
             >
-              {loginMutation.isPending ? "Logging in..." : "Login"}
+              Login
             </Button>
           </form>
         </CardContent>

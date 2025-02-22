@@ -4,7 +4,7 @@ import { Phone, LogIn, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function Navigation() {
-  const { user, logoutMutation } = useAuth();
+  // const { user, logoutMutation } = useAuth();
 
   const handleWhatsAppClick = () => {
     window.open("https://wa.me/+919657419302", "_blank");

@@ -11,7 +11,7 @@ import { PropertyCard } from "@/components/PropertyCard";
 import axios from "axios";
 
 export default function Properties() {
-  const { user } = useAuth();
+  const data= useAuth();
   const [showAddForm, setShowAddForm] = useState(false);
   const [allproperties, setAllProperties] = useState([]);
 
@@ -48,7 +48,7 @@ export default function Properties() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-12">
           <h1 className="text-4xl font-playfair">Available Properties</h1>
-          {user?.isAdmin && (
+          {data?.isAdmin && (
             <Button onClick={() => setShowAddForm(true)}>
               <Plus className="mr-2 h-4 w-4" />
               Add Property
