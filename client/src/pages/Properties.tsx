@@ -14,11 +14,7 @@ export default function Properties() {
   const { user } = useAuth();
   const [showAddForm, setShowAddForm] = useState(false);
   const [allproperties, setAllProperties] = useState([]);
-  // const { data: allproperties, isLoading } = useQuery<Property[]>({
-  //   queryKey: ["/api/properties"]
-  // });
 
-  // console.log("allproperties are:", allproperties)
   useEffect(() => {
     const fetchData = async () => {
       try {

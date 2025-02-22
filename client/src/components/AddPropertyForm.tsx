@@ -13,6 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
 
 interface AddPropertyFormProps {
   onClose: () => void;
@@ -122,16 +123,29 @@ export default function AddPropertyForm({ onClose }: AddPropertyFormProps) {
 
       const { title, description, area, price, type, location } = data;
       try {
-        const res = await apiRequest("POST", "/api/properties", {
-          title,
-          description,
-          area,
-          price,
-          type,
-          location,
-          images: uploadedImages,
-          videos: uploadedVideos,
-        });
+        const data = await axios.post(
+          "https://patil-and-sons-backend.onrender.com/properties",
+          {
+            title,
+            description,
+            area,
+            price,
+            type,
+            location,
+            images: uploadedImages,
+            videos: uploadedVideos,
+          }
+        );
+        // const res = await apiRequest("POST", "https://patil-and-sons-backend.onrender.com/properties", {
+        //   title,
+        //   description,
+        //   area,
+        //   price,
+        //   type,
+        //   location,
+        //   images: uploadedImages,
+        //   videos: uploadedVideos,
+        // });
 
         toast({
           title: "Success",
