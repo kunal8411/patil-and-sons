@@ -32,7 +32,7 @@ export default function Navigation() {
               <Phone className="mr-2 h-4 w-4" />
               Contact Us
             </Button>
-            {user ? (
+            {/* {user ? (
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -48,7 +48,7 @@ export default function Navigation() {
                   Admin Login
                 </Button>
               </Link>
-            )}
+            )} */}
           </div>
         </div>
       </div>

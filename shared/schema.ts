@@ -19,7 +19,7 @@ export const properties = pgTable("properties", {
   type: text("type").notNull(),
   images: text("images").array().notNull(),
   videos: text("videos").array().notNull(),
-  features: text("features").array().notNull(),
+  // features: text("features").array().notNull(),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });

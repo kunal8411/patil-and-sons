@@ -11,10 +11,10 @@ import AddPropertyForm from "@/components/AddPropertyForm";
 export default function Properties() {
   const { user } = useAuth();
   const [showAddForm, setShowAddForm] = useState(false);
-  // const { data: properties, isLoading } = useQuery<Property[]>({
-  //   queryKey: ["/api/properties"]
-  // });
-  const properties=[
+  const { data: properties, isLoading } = useQuery<Property[]>({
+    queryKey: ["/api/properties"]
+  });
+  const propertiesq=[
     {
       id:123,
       title: "Premium NA Plot in Nashik",
@@ -58,7 +58,7 @@ export default function Properties() {
       updatedAt: new Date().toISOString()
     }
   ];
-  const isLoading = false;
+  // const isLoading = false;
 
   if (isLoading) {
     return (
