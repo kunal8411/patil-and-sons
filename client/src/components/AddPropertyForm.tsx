@@ -22,6 +22,7 @@ export default function AddPropertyForm({ onClose }: AddPropertyFormProps) {
   const { toast } = useToast();
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
+  const [showScroller, setShowScroller] = useState<boolean>(false);
 
   const form = useForm<InsertProperty>({
     resolver: zodResolver(insertPropertySchema),
@@ -104,6 +105,7 @@ export default function AddPropertyForm({ onClose }: AddPropertyFormProps) {
 
   const onSubmit = async (data: InsertProperty) => {
     try {
+      setShowScroller(true);
       // Upload all images
       const uploadedImages = await Promise.all(
         images.map((file) => uploadToCloudinary(file))
@@ -117,18 +119,7 @@ export default function AddPropertyForm({ onClose }: AddPropertyFormProps) {
       console.log("DATA IS", data);
       console.log("uploaded Images are", uploadedImages);
       console.log("uploaded Videos are", uploadedVideos);
-      // const formattedFeatures = data.features ?
-      //   (typeof data.features === 'string' ?
-      //     data.features.split(',').map(f => f.trim()).filter(f => f !== '')
-      //     : data.features)
-      //   : [];
 
-      // propertyMutation.mutate({
-      //   ...data,
-      //   images: uploadedImages,
-      //   videos: uploadedVideos,
-      //   features: formattedFeatures
-      // });
       const { title, description, area, price, type, location } = data;
       try {
         const res = await apiRequest("POST", "/api/properties", {
@@ -146,6 +137,7 @@ export default function AddPropertyForm({ onClose }: AddPropertyFormProps) {
           title: "Success",
           description: "Property added successfully",
         });
+        setShowScroller(false);
         onClose();
       } catch (error: any) {
         toast({
@@ -154,10 +146,14 @@ export default function AddPropertyForm({ onClose }: AddPropertyFormProps) {
             error && error?.message ? error.message : "Something went wrong",
           variant: "destructive",
         });
+      } finally {
+        setShowScroller(false);
       }
     } catch (error) {
       console.error("Submission error:", error);
       // Handle error (show toast notification, etc.)
+    } finally {
+      setShowScroller(false);
     }
   };
 
@@ -321,9 +317,18 @@ export default function AddPropertyForm({ onClose }: AddPropertyFormProps) {
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" disabled={propertyMutation.isPending}>
-              {propertyMutation.isPending ? "Adding..." : "Add Property"}
-            </Button>
+
+            {showScroller ? (
+              <div className="w-10 h-10 rounded-full border-4 border-blue-600 flex items-center justify-center overflow-hidden relative">
+                <div className="scrolling-text text-sm text-blue-600 absolute w-full h-full flex items-center justify-center">
+                  <span className="animate-spin-slow">...</span>
+                </div>
+              </div>
+            ) : (
+              <Button type="submit" disabled={propertyMutation.isPending}>
+                {propertyMutation.isPending ? "Adding..." : "Add Property"}
+              </Button>
+            )}
           </div>
         </form>
       </CardContent>
